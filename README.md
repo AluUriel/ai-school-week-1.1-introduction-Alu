@@ -54,6 +54,9 @@ Use the following command to export all of your environmental variables while ig
 export $(grep -v '^#' .env | xargs)
 ```
 
+In windows
+$env:OPENAI_API_KEY = "your_openai_api_key"
+
 ### Alternatively - Load the Variables Inside Your Shell
 If you experience problems using the `.env` file or do not wish to use one, you can load the variables directly from your shell. Use a command structured like this to load each variable:
 ```bash

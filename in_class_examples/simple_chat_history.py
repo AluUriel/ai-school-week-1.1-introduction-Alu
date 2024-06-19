@@ -1,9 +1,34 @@
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 
-chat = ChatOpenAI()
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
-messages = [
+chatA = ChatOpenAI()
+chatB = ChatOpenAI()
+
+def print_conversation(messages):
+    for message in messages:
+        if isinstance(message, HumanMessage):
+            print(bcolors.OKCYAN +"chatB: " + bcolors.ENDC + message.content)
+        elif isinstance(message, AIMessage):
+            print(bcolors.OKGREEN + "ChatA: " + bcolors.ENDC + message.content)
+        else:
+            print("Unknown message type.")
+
+systemA="You are a happy helpful human"
+systemB="You are a curious human who is learning a new language and you use english as your primary language."
+
+messagesA = [
+    SystemMessage(content=systemA),
     HumanMessage(
         content="Translate this sentence from English to French: I love programming."
     ),
@@ -11,19 +36,34 @@ messages = [
     HumanMessage(content="What did you just say?"),
 ]
 
-result = chat.invoke(messages).content
+messagesB = [
+    SystemMessage(content=systemB),
+    AIMessage(
+        content="Translate this sentence from English to French: I love programming."
+    ),
+    HumanMessage(content="J'adore la programmation."),
+    AIMessage(content="What did you just say?"),
+]
 
-messages.append(result)
-print(messages)
+result = chatA.invoke(messagesA).content
+
+messagesA.append(AIMessage(content=result))
+messagesB.append(HumanMessage(content=result))
+print_conversation(messagesA)
+
+
 
 # Continue the conversation
 # Try: Can you translate that phrase into Spanish?
 
 while True:
-    prompt = input("Prompt: ")
-    messages.append(HumanMessage(content=prompt))
+    input(bcolors.WARNING + "press to continue conversation" + bcolors.ENDC)
+    prompt = chatB.invoke(messagesB).content
+    messagesA.append(HumanMessage(content=prompt))
+    messagesB.append(AIMessage(content=prompt))
 
-    result = chat.invoke(messages).content
+    result = chatA.invoke(messagesA).content
 
-    messages.append(result)
-    print(messages)
+    messagesA.append(AIMessage(content=result))
+    messagesB.append(HumanMessage(content=result))
+    print_conversation(messagesA)
