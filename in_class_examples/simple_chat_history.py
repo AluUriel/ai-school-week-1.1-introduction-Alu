@@ -12,8 +12,8 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-chatA = ChatOpenAI()
-chatB = ChatOpenAI()
+chatA = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.1)
+chatB = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.1)
 
 def print_conversation(messages):
     for message in messages:
@@ -25,7 +25,7 @@ def print_conversation(messages):
             print("Unknown message type.")
 
 systemA="You are a happy helpful human"
-systemB="You are a curious human who is learning a new language and you use english as your primary language."
+systemB="You are a curious human who is learning a new language and you use english as your primary language. you're also full of questions remember to ask questions to learn more."
 
 messagesA = [
     SystemMessage(content=systemA),
